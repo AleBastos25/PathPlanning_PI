@@ -5,7 +5,6 @@ from .models import ObstacleRect, Point, Scenario
 from .visualization import plot_scenario
 from .geometry import (
     dist,
-    segment_length,
     point_in_bounds,
     point_in_rect,
     segment_intersects_rect,
@@ -20,33 +19,17 @@ from .geometry import (
 
 # Algorithms
 from .algorithms import (
-    PSOParams,
-    ConfiguredParams,
+    PSOConfig,
     Particle,
     FitnessComponents,
     PSOResult,
-    SpatialGrid,
     pso_plan,
     build_path,
     unpack_waypoints,
     pack_waypoints,
-    build_spatial_grid,
     evaluate,
-    is_feasible,
-    estimate_waypoints,
-    estimate_particles,
-    configure_params,
     compute_adaptive_penalties,
-    inflate_obstacle,
-    inflate_obstacles,
 )
 
 # Utils
-from .utils import (
-    ExperimentResult,
-    run_experiment,
-    run_all_experiments,
-    save_results_csv,
-    print_results_summary,
-    plot_convergence,
-)
+from .utils import ExperimentResult, run_experiment, plot_convergence

@@ -219,15 +219,12 @@ def path_outside_bounds_length(path: list[Point], xmax: float, ymax: float) -> f
         total += segment_outside_bounds_length(path[i], path[i + 1], xmax, ymax)
     return total
 
-def clamp_points(points: list[Point], xmax: float, ymax: float) -> list[Point]:
-    return [Point(max(0.0, min(p.x, xmax)), max(0.0, min(p.y, ymax))) for p in points]
-
 # =============================================================================
 # Obstacle utilities
 # =============================================================================
 
 def obstacles_inflate(obstacles: list[ObstacleRect], R: float) -> list[ObstacleRect]:
-    return [ObstacleRect(obs.x_min - R, obs.y_min - R, obs.x_max + R, obs.y_max + R) for obs in obstacles]
+    return [ObstacleRect(obs.x_min - R, obs.y_min - R, (obs.x_max - obs.x_min) + 2*R, (obs.y_max - obs.y_min) + 2*R) for obs in obstacles]
 
 def candidate_obstacles(a: Point, b: Point, obstacles: list[ObstacleRect]) -> list[ObstacleRect]:
     return [obs for obs in obstacles if segment_intersects_rect(a, b, obs)]

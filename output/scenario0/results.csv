@@ -1,0 +1,6 @@
+config,scenario,n_particles,path_length,L_coll,iterations,cpu_time_sec,converged
+basic,scenario0,30,1443.3277,0.0,500,0.581,True
+restart,scenario0,30,1443.4328,0.0,500,0.7458,True
+sa,scenario0,30,1443.3277,0.0,500,0.6918,True
+dl,scenario0,30,1443.3277,0.0,500,3.8902,True
+all,scenario0,30,1515.0833,0.0,500,0.6842,True
