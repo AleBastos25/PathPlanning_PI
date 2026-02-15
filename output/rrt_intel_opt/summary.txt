@@ -1,0 +1,5 @@
+SCENARIO_0: {'time': 8.8367, 'iters': 5000, 'cost': 1443.3986, 'len': 3, 'first': 439}
+SCENARIO_1: {'time': 9.7704, 'iters': 5000, 'cost': 1452.451, 'len': 5, 'first': 678}
+SCENARIO_2: {'time': 10.1975, 'iters': 5000, 'cost': 1506.3447, 'len': 6, 'first': 603}
+SCENARIO_3: {'time': 9.4446, 'iters': 5000, 'cost': 1529.6356, 'len': 7, 'first': 1229}
+SCENARIO_4: {'time': 7.1663, 'iters': 5000, 'cost': 1954.3758, 'len': 9, 'first': 2171}

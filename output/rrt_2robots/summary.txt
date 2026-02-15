@@ -1,0 +1,7 @@
+scenario0: {'time': 6.5909, 'iters': 5000, 'first': 1034}
+scenario1: {'time': 3.334, 'iters': 5000, 'first': 2703}
+scenario2: {'time': 1.379, 'iters': 5000, 'first': 3791}
+scenario3: {'time': 36.1164, 'iters': 30000, 'first': 15584}
+scenario4: {'time': 12.0648, 'iters': 30000}
+test_2robots: {}
+test_empty: {'time': 8.2757, 'iters': 5000, 'first': 364}

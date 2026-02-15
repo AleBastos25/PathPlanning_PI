@@ -174,6 +174,7 @@ class RRT2RobotsBasic:
         # Anytime metrics
         self.best_path: List[State4] = []
         self.best_makespan: float = float('inf')
+        self.first_success_iter: Optional[int] = None
         
     def _dist4(self, s1: State4, s2: State4) -> float:
         return math.sqrt(
@@ -272,7 +273,7 @@ class RRT2RobotsBasic:
                 
         return new_path
 
-    def plan(self) -> Tuple[List[State4], float]:
+    def plan(self) -> Tuple[List[State4], float, Optional[int]]:
         start_state = State4(
             self.scenario.start1.x, self.scenario.start1.y,
             self.scenario.start2.x, self.scenario.start2.y
@@ -280,7 +281,7 @@ class RRT2RobotsBasic:
         
         if not self._state_valid(start_state):
             print("CRITICAL: Start state is invalid (collision or bounds).")
-            return [], 0.0
+            return [], 0.0, None
 
         self.nodes = [Node4(start_state, None, 0.0)]
         # Tighter goal tolerance
@@ -330,6 +331,8 @@ class RRT2RobotsBasic:
                         print(f"New Checkpoint! Iter {k}, Makespan: {curr_makespan:.2f}")
                         self.best_makespan = curr_makespan
                         self.best_path = raw_path
+                        if self.first_success_iter is None:
+                            self.first_success_iter = k
                         # Don't return, keep searching (Anytime)
                     
         print("Max iters reached.")
@@ -340,9 +343,10 @@ class RRT2RobotsBasic:
             optimized_path = self.shortcut_path_4d(self.best_path)
             optimized_makespan = self._calculate_makespan(optimized_path)
             print(f"Optimization: {self.best_makespan:.2f} -> {optimized_makespan:.2f}")
-            return optimized_path, optimized_makespan
+            print(f"Optimization: {self.best_makespan:.2f} -> {optimized_makespan:.2f}")
+            return optimized_path, optimized_makespan, self.first_success_iter
             
-        return [], 0.0
+        return [], 0.0, None
 
     def _reconstruct_path(self, idx: int) -> List[State4]:
         path = []
@@ -439,6 +443,7 @@ def plot_results(scenario: Scenario, nodes: List[Node4], path: List[State4] = No
 
 if __name__ == "__main__":
     import argparse
+    import time
     parser = argparse.ArgumentParser()
     parser.add_argument("scenario", help="Path to scenario file")
     parser.add_argument("--iters", type=int, default=5000)
@@ -454,11 +459,18 @@ if __name__ == "__main__":
         print(f"S1: ({scen.start1.x:.2f}, {scen.start1.y:.2f})  S2: ({scen.start2.x:.2f}, {scen.start2.y:.2f})")
         print(f"G1: ({scen.goal1.x:.2f}, {scen.goal1.y:.2f})  G2: ({scen.goal2.x:.2f}, {scen.goal2.y:.2f})")
         
+        start_time = time.time()
         solver = RRT2RobotsBasic(scen, max_iters=args.iters, step_size=args.step)
-        path, cost = solver.plan()
+        path, cost, first_iter = solver.plan()
+        duration = time.time() - start_time
+        
+        print(f"Planning complete in {duration:.4f}s")
+        print(f"Total Iterations: {args.iters}")
         
         if path:
             print(f"Final Path Found! Steps: {len(path)}, Makespan: {cost:.2f}")
+            if first_iter is not None:
+                print(f"First Success Iter: {first_iter}")
         else:
             print("No path found.")
             

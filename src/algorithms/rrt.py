@@ -56,6 +56,7 @@ class RRTResult:
     iters: int
     cpu_time: float
     tree_nodes: List[Node]
+    first_success_iter: Optional[int] = None
 
 class RRTStar:
     def __init__(self, scenario: Scenario, params: RRTParams):
@@ -345,6 +346,7 @@ class RRTStar:
         edge_follow_budget = 0
         best_dist_to_goal_seen = float('inf')
         last_blocking_obs_idx: Optional[int] = None
+        first_success_iter: Optional[int] = None
         
         # Initial dist
         best_dist_to_goal_seen = dist(self.scenario.start1, self.scenario.goal1)
@@ -446,6 +448,8 @@ class RRTStar:
                     goal_cost = min_cost + d_goal
                     if self.goal_idx is None:
                         self.goal_idx = self._add_node(self.scenario.goal1, new_node_idx, goal_cost)
+                        if first_success_iter is None:
+                            first_success_iter = i_iter
                         # Reset stuck because we found goal!
                         stuck_counter = 0
                         best_dist_to_goal_seen = 0
@@ -477,5 +481,6 @@ class RRTStar:
             cost=final_cost,
             iters=self.params.max_iters,
             cpu_time=cpu_time,
-            tree_nodes=self.nodes
+            tree_nodes=self.nodes,
+            first_success_iter=first_success_iter
         )

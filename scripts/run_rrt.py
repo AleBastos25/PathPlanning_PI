@@ -54,6 +54,8 @@ def main():
     if result.path:
         print(f"Path found! Cost: {result.cost:.4f}")
         print(f"Path length (nodes): {len(result.path)}")
+        if result.first_success_iter is not None:
+             print(f"First Success Iter: {result.first_success_iter}")
     else:
         print("No path found.")
 
