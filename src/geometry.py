@@ -11,6 +11,10 @@ def dist(a: Point, b: Point) -> float:
     return math.sqrt((b.x - a.x) ** 2 + (b.y - a.y) ** 2)
 
 
+def segment_length(a: Point, b: Point) -> float:
+    return dist(a, b)
+
+
 def point_in_bounds(p: Point, xmax: float, ymax: float) -> bool:
     return -EPS <= p.x <= xmax + EPS and -EPS <= p.y <= ymax + EPS
 
@@ -56,8 +60,24 @@ def segment_intersects_segment(a: Point, b: Point, c: Point, d: Point) -> bool:
 
 
 def segment_intersects_rect(p: Point, q: Point, rect: ObstacleRect) -> bool:
-    """Check if segment PQ intersects rectangle."""
-    result = _liang_barsky_clip(p, q, rect.x_min, rect.y_min, rect.x_max, rect.y_max)
+    """Check if segment PQ intersects rectangle.
+    
+    Treats the obstacle as effectively slightly smaller (by EPS) to allow 
+    tangency/grazing of the boundary without being considered a collision.
+    """
+    # Shrink bounds by EPS to allow boundary touching
+    x_min = rect.x_min + EPS
+    y_min = rect.y_min + EPS
+    x_max = rect.x_max - EPS
+    y_max = rect.y_max - EPS
+    
+    # If shrunk rectangle is invalid (obstacle smaller than 2*EPS), use centroid check or original
+    if x_min >= x_max or y_min >= y_max:
+        # Fallback for tiny obstacles: just check if midpoint is inside original
+        mid = Point((p.x+q.x)/2, (p.y+q.y)/2)
+        return point_in_rect(mid, rect)
+
+    result = _liang_barsky_clip(p, q, x_min, y_min, x_max, y_max)
     return result is not None
 
 
